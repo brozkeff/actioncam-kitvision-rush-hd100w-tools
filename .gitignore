@@ -1,0 +1,23 @@
+/apps/
+/media/
+/tmp/
+/target/
+__pycache__/
+.venv/
+
+# Local outputs and tooling caches
+/captures/
+.ruff_cache/
+.pytest_cache/
+*.py[cod]
+*.pcap
+*.pcapng
+.env
+.env.*
+!.env.example
+
+# Vendor packages and firmware dumps, even if placed outside apps/ or tmp/
+*.apk
+*.dmg
+*.exe
+*.bin
