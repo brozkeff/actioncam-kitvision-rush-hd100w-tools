@@ -25,6 +25,10 @@
 - [External SD inspection](findings/2026-11-05-external-card.md).
 - [Wi-Fi capture and clock distinction](findings/2026-11-05-wifi-capture.md).
 - [Boot and runtime analysis](findings/2026-11-05-boot-analysis.md).
+- [Generated status-page credential disclosure](findings/2026-11-06-status-page.md).
+- [Port 8083 filesystem paths and app endpoint references](findings/2026-11-06-http-filesystem.md).
+- [Port 8084 service and static endpoint analysis](findings/2026-11-06-port-8084.md).
+- [Android app network behavior](findings/2026-11-06-android-app.md).
 - Original USB observations are summarized in [hardware and modes](hardware/camera.md).
 
 Raw evidence lives in ignored tmp/camera/, not in the public repository.

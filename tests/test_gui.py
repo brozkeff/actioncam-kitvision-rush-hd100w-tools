@@ -1,7 +1,7 @@
 """Checks for GUI command isolation and preview lifecycle."""
 
+import json
 import queue
-import subprocess
 import tempfile
 import threading
 import unittest
@@ -12,15 +12,19 @@ from tools import gui
 
 
 class GuiTests(unittest.TestCase):
-    def test_control_runs_existing_cli_with_bounded_timeout(self) -> None:
-        result = subprocess.CompletedProcess([], 0, '{"ok": true}', "")
-        with mock.patch.object(gui.subprocess, "run", return_value=result) as run:
-            self.assertIs(gui.run_control("192.168.1.2", "record", "start"), result)
-        args, kwargs = run.call_args
-        self.assertEqual(Path(args[0][1]).name, "control.py")
-        self.assertEqual(args[0][2:], ["--host", "192.168.1.2", "record", "start"])
-        self.assertEqual(kwargs["timeout"], 60)
-        self.assertTrue(kwargs["capture_output"])
+    def test_control_uses_shared_operation(self) -> None:
+        with mock.patch.object(gui.control, "execute", return_value={"ok": True}) as run:
+            result = gui.run_control("192.168.1.2", "record", "start")
+        args = run.call_args.args[0]
+        self.assertEqual((args.host, args.command, args.action), ("192.168.1.2", "record", "start"))
+        self.assertEqual(json.loads(result.stdout), {"ok": True})
+        self.assertEqual(result.returncode, 0)
+
+    def test_control_reports_operation_error(self) -> None:
+        with mock.patch.object(gui.control, "execute", side_effect=TimeoutError("timeout")):
+            result = gui.run_control("192.168.1.2", "status")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("timeout", result.stderr)
 
     def test_stop_preview_invalidates_late_frames(self) -> None:
         window = gui.CameraWindow.__new__(gui.CameraWindow)

@@ -21,7 +21,7 @@ authentication and HTTP filesystem exposure.
 | 80 | Web interface | BusyBox httpd running |
 | 6667 | Binary camera control | remote server initialization at `0x409da8` |
 | 8083 | Static HTTP/media access | lighttpd.conf specifies port and root `/` |
-| 8084 | Camera HTTP/stream service | bin/http bind code and APK preview URL |
+| 8084 | Camera HTTP/file-stream service | active `/bin/http` bind, APK URL and observed HTTP response |
 
 Nmap labels 6667 as IRC by port convention; this is not evidence of IRC.
 Raw scan outputs: ignored `tmp/camera/nmap-tcp.*`.

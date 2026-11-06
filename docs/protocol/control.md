@@ -160,8 +160,10 @@ ProtocolHostInfo1 in the APK.
 - Recording with the APK's exact 10000 timeout field still returned `0x8d`.
   The camera Linux log showed SPI slave receive timeouts. Do not label this
   error as definitely no SD, authentication failure, or low battery.
-- The Real_Time HTTP endpoint on 8084 returned status 200 and
-  application/octet-stream but supplied no 4096-byte body before timeout.
+- The Android URL `http://192.168.1.2:8084/?stream` returned status 200 and
+  `application/octet-stream` but supplied no 4096-byte body before timeout.
+  Static analysis now identifies `/bin/http` as the port 8084 listener; see
+  [port 8084 analysis](../findings/2026-11-06-port-8084.md).
 - The APK-derived space query (family 255, command 32, selector 0, timeout
   field 1000) also timed out in Real_Time. It is not exposed as a supported
   command in the public CLI yet.

@@ -75,16 +75,17 @@ unknown versions have not been guessed.
 | Static HTTP | `/sbin/lighttpd`, TCP 8083 | 1.4.20; live `lighttpd -v` |
 | Wireless AP | `hostapd` | `v0.8.x`; live `hostapd -v` |
 | Camera control | `/bin/remote`, TCP 6667 | Unknown; protocol `0x13` |
-| Camera HTTP | `/bin/http`, TCP 8084 observed | Unknown; see caveat below |
+| Camera HTTP | `/bin/http`, TCP 8084 | Port bind is present in the active service binary and boot script |
 | Preview | TCP 8080 when enabled | HTTP plugin says `MJPG-Streamer/0.2` |
 
 The `MJPG-Streamer/0.2` string is an embedded server identifier, not a
 verified precise source revision or proof of the process serving a given
 request. DNS service behavior and UDP ports remain unverified. Process lists
 and open ports can vary with camera mode; port 8080 is not always listening.
-The `/bin/http` association with port 8084 is not yet verified. The lighttpd
-build date is 2012-09-06. The 2026-11-06 process list also contained
-`factoryreset` and serial `getty`.
+The `/bin/http` service is started by `/etc/rc.d/rcS`; its MIPS binary contains
+the TCP 8084 bind and HTTP file-response code. See [port 8084 analysis](../findings/2026-11-06-port-8084.md).
+The lighttpd build date is 2012-09-06. The 2026-11-06 process list also
+contained `factoryreset` and serial `getty`.
 
 System identifiers from live Telnet: Linux
 `2.6.31--LSDK-9.2.0_U10.5.13`, build `#163` from 2013-08-06, MIPS;

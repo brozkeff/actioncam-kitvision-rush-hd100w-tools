@@ -3,6 +3,7 @@
 import argparse
 import ftplib
 import io
+import json
 import queue
 import subprocess
 import sys
@@ -15,17 +16,16 @@ from typing import Any
 from PIL import Image, ImageTk
 
 if __package__:
+    from . import control
     from .record import capture
     from .rush import enable_preview, fetch_snapshot, host_address
 else:
+    import control
     from record import capture
     from rush import enable_preview, fetch_snapshot, host_address
 
-TOOLS = Path(__file__).resolve().parent
-
-
 def run_control(host: str, *arguments: str) -> subprocess.CompletedProcess[str]:
-    """Run the existing CLI with a bounded wait and capture its output.
+    """Call the same control operation as the CLI and format its result.
 
     Args:
         host: Validated camera IPv4 address.
@@ -34,13 +34,12 @@ def run_control(host: str, *arguments: str) -> subprocess.CompletedProcess[str]:
     Returns:
         Completed command including stdout, stderr and exit status.
     """
-    return subprocess.run(
-        [sys.executable, str(TOOLS / "control.py"), "--host", host, *arguments],
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
+    argv = ["--host", host, *arguments]
+    try:
+        result = control.execute(control.parse_args(argv))
+        return subprocess.CompletedProcess(argv, 0, json.dumps(result) + "\n", "")
+    except (OSError, ValueError, RuntimeError) as error:
+        return subprocess.CompletedProcess(argv, 1, "", f"control: {error}\n")
 
 
 class CameraWindow:

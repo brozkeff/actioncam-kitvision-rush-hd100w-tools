@@ -12,7 +12,7 @@ for the camera owner's actual configured Wi-Fi password.
 | `80/TCP` | Web UI / CGI | Tested |
 | `8080/TCP` | JPEG/MJPEG preview | Tested after UVC activation |
 | `8083/TCP` | Filesystem HTTP | Static config and tested downloads |
-| `8084/TCP` | Android real-time stream | APK literal; HTTP 200, body stalled |
+| `8084/TCP` | Camera HTTP file/stream service | `/bin/http` binds this port; APK `/?stream`; HTTP 200 observed, body stalled |
 | `root` / `root` | Telnet credentials | Login tested |
 | `ap71` / empty password | FTP credentials | Login and downloads tested |
 | `APPIOS` | Binary login username | Firmware compare and successful login |

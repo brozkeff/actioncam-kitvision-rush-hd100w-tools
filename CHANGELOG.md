@@ -4,6 +4,20 @@
 
 ## [Unreleased]
 
+### Added
+
+- Record owner confirmation that the generated status page exposes Wi-Fi
+  credentials, Android app network metadata behavior, and a preliminary
+  Windows app inventory; map read-only targets on 8083 and analyze the 8084
+  camera HTTP service.
+
+## [0.0.9] - 2026-11-06
+
+### Changed
+
+- Share control command execution between the CLI and GUI without launching a
+  separate process for each GUI operation.
+
 ## [0.0.8] - 2026-11-06
 
 ### Added

@@ -19,7 +19,7 @@ already joined its hotspot. We did not demonstrate Wi-Fi encryption bypass.
 | TCP 6667 | Open binary control listener | Fixed shared login, now verified |
 | TCP 8080 | No-auth JPEG and MJPEG when preview active | Live camera viewing |
 | TCP 8083 | HTTP, no authentication on tested URLs | Filesystem reads |
-| TCP 8084 | Open camera HTTP service | APK stream target; details pending |
+| TCP 8084 | Camera HTTP/file-stream service | `/bin/http` static bind; APK stream target; HTTP 200 observed, body stalled |
 | TCP 53 | Open listener; dnsmasq running | DNS candidate, behavior untested |
 
 TCP 8080 was initially closed and opened after preview activation, so it is
@@ -43,6 +43,10 @@ label for 6667 is incorrect for this binary protocol.
   matching 78,320-byte binary. This is direct filesystem exposure, not just an
   inference from document-root configuration. Sensitive file URLs were not
   needed for this test and are not reproduced in published notes.
+- The generated `/tmp/www/ver.html` page was opened on the camera at port 8083
+  and showed the configured SSID and passphrase, along with firmware details.
+  The owner redacted credentials from the shared response. See the
+  [verified status-page finding](findings/2026-11-06-status-page.md).
 - POST `/cgi-bin/uvc` needed no HTTP login and activated preview. A timeout did
   not mean failure: the service subsequently delivered JPEG frames on 8080.
 - Both snapshot and multipart MJPEG endpoints delivered frames without login.

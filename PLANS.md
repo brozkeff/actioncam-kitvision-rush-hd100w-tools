@@ -19,6 +19,16 @@
       conditions required for mode switching and recording.
       In UVC, status and clock work but mode-get also returns `0x8d`;
       repeat card checks in an appropriate mode with physical state known.
+- [ ] Trace port 8084 request parsing, supported methods and paths in the active
+      `/bin/http` binary, including camera-device and realtime mode calls.
+- [ ] Trace the Android app's realtime startup and control commands; it calls
+      `ProtocolSwitchRealtime`, waits two seconds and opens `/?stream`.
+- [ ] Reconstruct the dumped uClibc links in an isolated environment and use
+      QEMU, syscall tracing and multiarchitecture GDB to investigate `/bin/http`.
+      Account for the unavailable proprietary `/dev/CAM00` device.
+- [ ] Trace the `remote` realtime mode implementation and camera device interface.
+- [ ] Compare a bounded live 8084 response with the app's startup sequence once
+      the relevant mode transitions and camera state are understood.
 - [ ] Validate three recording start/stop cycles and playable output.
       Three files decoded after battery-powered tests; one stop reply was
       mismatched, although a fresh status showed stopped. Repeat that cycle.

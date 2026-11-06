@@ -4,6 +4,11 @@ Connect the host to camera Wi-Fi. No root shell or vendor library is required
 for these commands; the Python client implements the binary protocol and its
 legacy challenge/response login. See [wire specification](protocol/control.md).
 
+The GUI and CLI call the same control operations in `tools/control.py`.
+Preview and snapshot commands are in `tools/rush.py`, and managed recording
+is available through `tools/record.py`; their GUI controls share those Python
+operations. See the corresponding tool help for their command-line options.
+
 ```sh
 uv run python tools/control.py info
 uv run python tools/control.py status
