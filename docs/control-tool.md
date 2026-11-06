@@ -32,6 +32,13 @@ nonzero exit code; writes are never automatically repeated.
 Stop the webcam producer first. Mode changes may detach SD storage or stop
 preview and must not overlap media downloads or other control clients.
 
+**Recovery:** After a managed-recording test returned `0x8d`, the owner
+reported that the camera stopped responding to its buttons. A brief press of
+the physical reset button shut it down immediately, and it could then be
+started again. The effect on settings and any in-progress file was not checked.
+The cause of the hang is unknown. Avoid repeating the managed-recording test
+until the failure is investigated.
+
 To record and copy one new video locally, use:
 
 ```sh

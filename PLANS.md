@@ -22,6 +22,8 @@
 - [ ] Validate three recording start/stop cycles and playable output.
       Three files decoded after battery-powered tests; one stop reply was
       mismatched, although a fresh status showed stopped. Repeat that cycle.
+- [ ] Investigate the managed-recording hang and failed stop before further
+      hardware recording tests; a brief physical reset recovered the camera.
 - [x] Add uv/Python 3.15 diagnostics and snapshot prototypes.
 - [x] Verify preview activation POST and add bounded activation/capture commands.
 - [x] Implement clock read/write and verify readback within one second.

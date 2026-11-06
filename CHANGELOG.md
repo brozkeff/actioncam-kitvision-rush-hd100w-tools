@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.0.8] - 2026-11-06
+
+### Added
+
+- Document the observed physical reset recovery after a recording hang.
+
 ## [0.0.7] - 2026-11-06
 
 ### Added
