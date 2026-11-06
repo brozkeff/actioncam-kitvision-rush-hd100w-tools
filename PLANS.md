@@ -47,5 +47,13 @@
 - [x] Add binary fixtures, framing, timeout invalidation, login and clock tests.
 - [ ] Audit tracked content before any public release.
 
-Future: desktop GUI, Windows/macOS adapters, modern native Kotlin Android client.
+- [x] Build a minimal Kotlin Android 12+ client with local Wi-Fi, status, clock,
+      preview, experimental recording and network diagnostics.
+- [x] Verify Android installation, camera connection, status and preview on Moto
+      G85 / Android 16; preview recovered after camera power reconnection.
+- [ ] Verify Android clock write/readback and recording on hardware.
+- [ ] Reconstruct and verify camera-side photo capture before enabling it.
+- [ ] Add Android media browsing and downloads in a later release.
+
+Future: Windows/macOS adapters and Android client refinements.
 No iOS work planned. Firmware flashing, factory reset and formatting excluded.

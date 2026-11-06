@@ -26,6 +26,27 @@
 
 ## Application implications
 
+### Android 16 failure reproduced from Linux
+
+The owner reported Android access to the known service ports except 8080,
+which returned connection refused. A Linux recheck also found ports 80 and
+8084 accepting connections and 8080 refusing them. Status reported
+`Mass_Storage`, battery 100%, recording false. The process list contained no
+MJPEG streamer, and `/sys/bus/usb/devices` contained only `usb1` and `1-0:1.0`;
+the downstream USB camera product path was absent. The existing `/dev/video0`
+node alone did not establish that a camera was attached.
+
+One activation POST from Linux timed out after 15 seconds. Captured headers
+included HTTP 200 and the CGI messages `set host mode` and `CMDid 0004`;
+the preview listener did not start during the observation. This reproduces
+the startup failure independently of Android and points to the camera's mode
+transition/internal USB state. The precise cause and recovery remain unknown.
+Do not treat a successful CGI HTTP status as successful preview activation.
+
+The owner subsequently disconnected and reconnected camera power and confirmed
+that Android preview worked. This verifies preview delivery on Moto G85 with
+Android 16 after recovery; the cause of the stuck camera state remains unknown.
+
 - Desktop preview can likely consume ordinary MJPEG without the vendor SDK.
 - Model preview activation/deactivation explicitly and validate recording
   compatibility before automatically switching modes.

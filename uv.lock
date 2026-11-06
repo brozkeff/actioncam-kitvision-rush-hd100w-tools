@@ -58,7 +58,7 @@ wheels = [
 
 [[package]]
 name = "rush-hd100w"
-version = "0.0.9"
+version = "0.0.12"
 source = { virtual = "." }
 dependencies = [
     { name = "pillow" },

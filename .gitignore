@@ -9,6 +9,12 @@ __pycache__/
 /captures/
 .ruff_cache/
 .pytest_cache/
+/android/.gradle/
+/android/.kotlin/
+/android/**/build/
+/android/local.properties
+*.keystore
+*.jks
 *.py[cod]
 *.pcap
 *.pcapng

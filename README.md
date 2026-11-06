@@ -42,6 +42,9 @@ uv run python tools/rush.py snapshot --activate tmp/snapshot.jpg
 uv run python tools/webcam.py
 ```
 
+An experimental Android 12+ app is available; see [Android build and installation](android/README.md)
+and [GitHub releases](https://github.com/brozkeff/actioncam-kitvision-rush-hd100w-tools/releases).
+
 The experimental Tkinter window shows camera status and time, offers control
 commands and displays live preview. It requires a graphical desktop and Python
 with Tkinter installed. Preview activation changes camera mode. Mode switching
