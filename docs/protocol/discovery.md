@@ -2,11 +2,41 @@
 
 ## USB configuration: observed static evidence
 
-Mac binary contains `_readAllConfig`, `_getConfig`, `_saveConfigLine`,
-`_setConfigLine`, clock UI handlers, `/ActionConfig` and `/ActionCamera.bin`.
-`_saveConfigLine` opens the configured path with `w+` and serializes selected
-configuration lines using `%s\n`. Exact file roles and field meanings remain
-unverified. Do not write either candidate file based on its name alone.
+The supplied macOS executable constructs `ActionConfig` beside the
+`actionplus.app` bundle by stripping `/actionplus.app` from its executable
+path. It also constructs a sibling `ActionCamera.bin` path. A missing
+`ActionConfig` causes a connection-failed dialog; its
+`CreateDefaultConfigFile` method is empty. This explains why simply starting
+the app elsewhere does not establish a camera configuration file. The paths
+are derived from the application location, not from a discovered SD mount.
+
+Static reconstruction of this particular executable (addresses are virtual
+Mach-O addresses):
+
+- `_readAllConfig` at `0x100005d50` uses `fgets` with a 100-byte buffer and
+  processes at most 99 chunks. It finds `[` and `]` anywhere in a chunk,
+  retains text starting at `[`, and classifies its first two decimal fields.
+  `[1,1,...]` through `[1,4,...]` become types 1–4; a first field of 2
+  becomes type 5. Other lines are unclassified. Long lines may be split.
+- `_getConfig` at `0x1000061e0` parses the first recognized instance of
+  each type. Type 3 scans 13 integers, adding 1970 to its year field.
+  The serializer at `0x100006e61` writes type 3 as
+  `[1,3,A,B,C,D,day,month,year_minus_1970,hour,minute,second,E,]`.
+  `A`–`E` are other settings whose meanings remain to be verified. The
+  date picker handler supplies calendar date and time components; the file
+  month and day are not decremented in this code path.
+- The date confirmation handler at `0x10000d090` updates type 3 and calls
+  `_saveConfigLine`. That function opens `ActionConfig` with `w+` and writes
+  only classified types 1–5 using `%s\n`; unclassified lines are dropped.
+  Rebuilt type 3 retains the other decoded settings, but does not preserve
+  arbitrary original text or extra fields. If type 3 is absent, the setter
+  does not construct a valid replacement type 3 in the observed branch.
+- Type 5 serialization includes the literal `ActionCamera.bin`; this does
+  not establish that file's contents or its role in applying settings.
+
+These are static findings, not a verified camera file or safe write recipe.
+No configuration file has been found on the inspected card. Do not create or
+rewrite either file until its actual origin and device behavior are verified.
 
 The original manual requires immediate USB disconnection after clock setting:
 [HD100W manual][manual]

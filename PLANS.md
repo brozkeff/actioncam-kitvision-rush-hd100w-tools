@@ -3,6 +3,8 @@
 - [x] Establish public/private repository boundaries and EUPL-1.2 licensing.
 - [x] Inspect USB descriptors and supplied application symbols.
 - [ ] Reconstruct configuration parser, serializer and clock apply sequence.
+      Mac parsing, date record and rewrite behavior traced; obtain a real
+      configuration and verify camera-side application before implementing writes.
 - [x] Inspect SD through external reader and later list it through camera FTP.
 - [ ] Back up camera-generated configuration if located.
 - [ ] Reconstruct Wi-Fi framing, authentication, ports and essential commands.

@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.0.4] - 2026-11-06
+
+### Added
+
+- Document the macOS application's USB configuration paths, record parsing,
+  clock record serialization and file rewrite limitations from disassembly.
+
 ## [0.0.3] - 2026-11-06
 
 ### Added
