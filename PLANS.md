@@ -6,7 +6,7 @@
       Mac parsing, date record and rewrite behavior traced; obtain a real
       configuration and verify camera-side application before implementing writes.
 - [x] Inspect SD through external reader and later list it through camera FTP.
-- [ ] Back up camera-generated configuration if located.
+- [x] Back up camera-generated configuration if located.
 - [ ] Reconstruct Wi-Fi framing, authentication, ports and essential commands.
 - [x] Connect via secondary Wi-Fi adapter and capture read-only diagnostics.
 - [x] Copy persistent firmware files and scan all TCP ports.
@@ -20,6 +20,8 @@
       In UVC, status and clock work but mode-get also returns `0x8d`;
       repeat card checks in an appropriate mode with physical state known.
 - [ ] Validate three recording start/stop cycles and playable output.
+      Three files decoded after battery-powered tests; one stop reply was
+      mismatched, although a fresh status showed stopped. Repeat that cycle.
 - [x] Add uv/Python 3.15 diagnostics and snapshot prototypes.
 - [x] Verify preview activation POST and add bounded activation/capture commands.
 - [x] Implement clock read/write and verify readback within one second.

@@ -35,8 +35,14 @@ Mach-O addresses):
   not establish that file's contents or its role in applying settings.
 
 These are static findings, not a verified camera file or safe write recipe.
-No configuration file has been found on the inspected card. Do not create or
-rewrite either file until its actual origin and device behavior are verified.
+On 2026-11-06, after the user restarted the camera on battery and took a photo,
+`ActionConfig` appeared at the card root alongside `actionplus.app`. A private
+158-byte backup is in ignored `tmp/camera/config-backups/`. Its type 3 record
+contains one further numeric field after the 13 fields parsed above, confirming
+that rewriting it with the legacy serializer would discard information. The
+file's clock fields differed from a contemporary live clock query; their update
+and apply timing remain unknown. Do not rewrite the file until camera-side
+behavior is verified.
 
 The original manual requires immediate USB disconnection after clock setting:
 [HD100W manual][manual]

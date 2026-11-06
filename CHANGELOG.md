@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.0.6] - 2026-11-06
+
+### Added
+
+- Document the backed-up camera configuration and battery-powered recording
+  tests, including a mismatched stop reply and decoded media.
+
 ## [0.0.5] - 2026-11-06
 
 ### Added

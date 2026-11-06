@@ -115,6 +115,20 @@ ProtocolHostInfo1 in the APK.
 
 ## Recording failure investigation
 
+- After a user-reported restart on battery and a successful physical photo,
+  Telnet showed `/dev/sda1` mounted at `/tmp/ftp/SDdisk`. Status and settings
+  reported `Mass_Storage`; switching to `Real_Time` succeeded. Three recording
+  starts were acknowledged and reported recording=true. The first and third
+  stops acknowledged and reported false. The second stop produced a mismatched
+  reply; fresh status reported false, so its acknowledgement remains unverified.
+  Three new MOV files were copied privately and decoded with ffmpeg without
+  errors: H.264 1920×1080, approximately 2.44, 0.60 and 2.84 seconds.
+  The camera was returned to `Mass_Storage`. This is evidence of recording
+  on battery with a mounted card, not proof that charging causes the failure.
+- The user observed that charging tends to coincide with the card being
+  unmounted. The prior UVC and current battery observations are consistent
+  with that report, but power and camera mode changed together, so the cause
+  is not isolated. Battery readings varied roughly 27–41% during this test.
 - A subsequent read-only check on 2026-11-06 found status mode `UVC`,
   recording false and battery 100%. Identity and dedicated clock reads
   succeeded; the combined settings query failed at family 1 command 17
