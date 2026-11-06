@@ -23,8 +23,8 @@ Do not treat a Linux `date -s` operation as a verified recording-clock change.
 
 ## Python is sufficient for the current application
 
-- Current work is network I/O, small protocol messages, diagnostics and process
-  management. Standard-library Python 3.15 handles it without runtime packages.
+- Network I/O, protocol messages, diagnostics and process management use the
+  Python standard library. Pillow decodes JPEG frames for the Tkinter GUI.
 - Video already flows through FFmpeg in native code. MJPEG passthrough copies
   compressed frames; Python does not decode or re-encode every pixel.
 - Linux device creation belongs to v4l2loopback. A new custom kernel driver
@@ -48,6 +48,7 @@ protocol specification. No Android or foreign-desktop builds are implemented.
 - `tools/rush.py`: inspect services, activate preview, save one JPEG.
 - `tools/control.py` and `tools/protocol.py`: identity, authenticated status,
   read-only settings and verified clock writes; experimental recording control.
+- `tools/gui.py`: Tkinter interface with background control and JPEG preview.
 - `tools/webcam.py`: allocate a new virtual camera by default, activate preview,
   and supervise FFmpeg; explicit existing-device mode supports older drivers.
 - `tools/inventory.py`, `tools/apk-inspect.py`, `tools/mips-analyze.py`: offline

@@ -36,8 +36,9 @@ remain in effect. [ADR 0003](0003-linux-webcam.md) covers video integration.
 ## Consequences
 
 The current tooling needs a compatible Python environment and uv setup. There
-are no third-party Python runtime dependencies; FFmpeg and Linux webcam tools
-are separate system requirements for virtual-camera use. A future Rust or
+initially had no third-party Python runtime dependencies; FFmpeg and Linux webcam
+tools are separate system requirements for virtual-camera use. The later GUI
+uses Pillow for JPEG display. A future Rust or
 other-platform implementation can follow the documented protocol without
 requiring a rewrite now. Recording and clock persistence still need hardware
 validation; language choice does not resolve those device uncertainties.

@@ -33,12 +33,20 @@ unauthenticated HTTP access expose substantial camera functionality.
 
 ```sh
 uv sync --python 3.15
+uv run python tools/gui.py
 uv run python tools/rush.py inspect
 uv run python tools/control.py status
 uv run python tools/control.py clock set --now --dry-run
 uv run python tools/rush.py snapshot --activate tmp/snapshot.jpg
 uv run python tools/webcam.py
 ```
+
+The experimental Tkinter window shows camera status and time, offers control
+commands and displays live preview. It requires a graphical desktop and Python
+with Tkinter installed. Preview activation changes camera mode. Mode switching
+and recording can still be rejected; errors appear in the output box.
+
+![Experimental camera controller showing status, preview and command output](docs/screenshots/tools-gui.png)
 
 Create `tmp/` if absent before saving a snapshot. Capture output paths must not
 already exist. Snapshot without `--activate` only reads an active preview;
@@ -86,8 +94,8 @@ in this repository. Their manifest and reproducible findings live in docs/.
 
 The code is developed with the assistance of GPT Codex.
 
-Python 3.15+ with uv and a project-local environment; no third-party Python
-runtime packages. Development tools are locked in uv.lock.
+Python 3.15+ with uv and a project-local environment. Pillow provides JPEG
+display in the GUI; development tools and dependencies are locked in uv.lock.
 
 ```sh
 uv run python -m unittest discover -s tests -v

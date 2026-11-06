@@ -1,6 +1,17 @@
 # Changelog
 
+<!-- markdownlint-disable MD024 -->
+
 ## [Unreleased]
+
+## [0.0.2] - 2026-11-06
+
+### Added
+
+- Experimental Tkinter camera controller with background status and clock
+  polling, command output, recording controls and a live JPEG preview.
+- Pillow dependency for displaying preview images.
+- README screenshot showing the experimental controller.
 
 ## [0.0.1] - 2026-11-06
 
