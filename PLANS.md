@@ -17,6 +17,8 @@
 - [ ] Check physical REC switch with inserted card after software error 0x8d.
 - [ ] Investigate intermittent Real_Time mode rejection `0xff`; identify the
       conditions required for mode switching and recording.
+      In UVC, status and clock work but mode-get also returns `0x8d`;
+      repeat card checks in an appropriate mode with physical state known.
 - [ ] Validate three recording start/stop cycles and playable output.
 - [x] Add uv/Python 3.15 diagnostics and snapshot prototypes.
 - [x] Verify preview activation POST and add bounded activation/capture commands.

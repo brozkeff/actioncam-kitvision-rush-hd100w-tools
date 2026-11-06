@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.0.5] - 2026-11-06
+
+### Added
+
+- Document read-only UVC mode, clock, settings error and storage observations.
+
 ## [0.0.4] - 2026-11-06
 
 ### Added

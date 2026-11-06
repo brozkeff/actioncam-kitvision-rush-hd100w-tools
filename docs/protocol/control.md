@@ -115,6 +115,17 @@ ProtocolHostInfo1 in the APK.
 
 ## Recording failure investigation
 
+- A subsequent read-only check on 2026-11-06 found status mode `UVC`,
+  recording false and battery 100%. Identity and dedicated clock reads
+  succeeded; the combined settings query failed at family 1 command 17
+  (mode get) with `0x8d`. Thus `0x8d` is not specific to recording
+  start/stop; its underlying meaning and relation to UVC remain unknown.
+  The camera clock was close to host local time during this check, but
+  power-cycle persistence was not established.
+- A Telnet mount listing showed no `/dev/sd` mount and the
+  `/tmp/ftp/SDdisk` directory was empty. This does not prove whether a
+  card is physically inserted or whether the recording processor sees one;
+  storage exposure depends on mode. No mode change was made for this check.
 - SD was inserted, and its files were listed over FTP while in Mass_Storage.
 - Clock setting worked with SD inserted.
 - Recording start initially timed out; a later reply could not safely be reused
