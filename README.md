@@ -45,6 +45,8 @@ The experimental Tkinter window shows camera status and time, offers control
 commands and displays live preview. It requires a graphical desktop and Python
 with Tkinter installed. Preview activation changes camera mode. Mode switching
 and recording can still be rejected; errors appear in the output box.
+Use **Save snapshot…** to choose where to save a JPEG; it activates preview
+if necessary and reports the result in the output box.
 
 ![Experimental camera controller showing status, preview and command output](docs/screenshots/tools-gui.png)
 

@@ -8,7 +8,7 @@ import sys
 import threading
 import tkinter as tk
 from pathlib import Path
-from tkinter import scrolledtext, ttk
+from tkinter import filedialog, scrolledtext, ttk
 from typing import Any
 
 from PIL import Image, ImageTk
@@ -56,6 +56,7 @@ class CameraWindow:
         self.frames: queue.Queue[tuple[int, Image.Image]] = queue.Queue(maxsize=1)
         self.control_lock = threading.Lock()
         self.control_busy = False
+        self.snapshot_busy = False
         self.preview_stop: threading.Event | None = None
         self.preview_generation = 0
         self.photo: ImageTk.PhotoImage | None = None
@@ -101,6 +102,9 @@ class CameraWindow:
         ).pack(side="left", padx=2)
         ttk.Button(
             preview_controls, text="Stop preview", command=self.stop_preview
+        ).pack(side="left", padx=2)
+        ttk.Button(
+            preview_controls, text="Save snapshot…", command=self.save_snapshot
         ).pack(side="left", padx=2)
         ttk.Label(preview_controls, textvariable=self.preview_status).pack(
             side="left", padx=8
@@ -235,6 +239,35 @@ class CameraWindow:
         self.photo = None
         self.image_label.configure(image="", text="No preview")
 
+    def save_snapshot(self) -> None:
+        """Choose a destination on the Tk thread and save a JPEG in a worker."""
+        if self.snapshot_busy:
+            self.log("A snapshot is already being saved.")
+            return
+        destination = filedialog.asksaveasfilename(
+            parent=self.root,
+            title="Save camera snapshot",
+            defaultextension=".jpg",
+            filetypes=[("JPEG images", "*.jpg *.jpeg"), ("All files", "*")],
+            initialfile="rush-snapshot.jpg",
+        )
+        if not destination:
+            return
+        self.snapshot_busy = True
+
+        def worker() -> None:
+            try:
+                # The dialog confirms replacement; fetch before touching the file.
+                with self.control_lock:
+                    enable_preview(self.host, 3, 20)
+                    data = fetch_snapshot(self.host, 3)
+                Path(destination).write_bytes(data)
+                self.events.put(("snapshot", f"Snapshot saved: {destination}"))
+            except (OSError, ValueError) as error:
+                self.events.put(("snapshot", f"Snapshot failed: {error}"))
+
+        threading.Thread(target=worker, daemon=True).start()
+
     def drain_events(self) -> None:
         """Apply background results to widgets exclusively on the Tk thread."""
         import json
@@ -282,6 +315,9 @@ class CameraWindow:
                 self.log(
                     f"$ control {' '.join(arguments)}\n{result.stdout}{result.stderr}".rstrip()
                 )
+            elif kind == "snapshot":
+                self.snapshot_busy = False
+                self.log(value)
             elif kind == "preview_started":
                 generation, result = value
                 if generation == self.preview_generation:

@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-11-06
+
+### Added
+
+- Save a camera JPEG from the GUI using a file selection dialog.
+
 ## [0.0.2] - 2026-11-06
 
 ### Added

@@ -1,6 +1,8 @@
 """Checks for GUI command isolation and preview lifecycle."""
 
+import queue
 import subprocess
+import tempfile
 import threading
 import unittest
 from pathlib import Path
@@ -42,6 +44,65 @@ class GuiTests(unittest.TestCase):
             window.command("mode", "realtime")
         stop.assert_called_once()
         launch.assert_called_once_with(("mode", "realtime"))
+
+    def test_snapshot_saves_selected_file_and_reports_result(self) -> None:
+        window = gui.CameraWindow.__new__(gui.CameraWindow)
+        window.root = mock.Mock()
+        window.host = "192.168.1.2"
+        window.snapshot_busy = False
+        window.control_lock = threading.Lock()
+        window.events = queue.Queue()
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "photo.jpg"
+            with (
+                mock.patch.object(
+                    gui.filedialog, "asksaveasfilename", return_value=str(destination)
+                ),
+                mock.patch.object(gui, "enable_preview"),
+                mock.patch.object(gui, "fetch_snapshot", return_value=b"jpeg data"),
+            ):
+                window.save_snapshot()
+                kind, message = window.events.get(timeout=2)
+            self.assertEqual(destination.read_bytes(), b"jpeg data")
+            self.assertEqual(kind, "snapshot")
+            self.assertIn("Snapshot saved", message)
+
+    def test_snapshot_failure_does_not_overwrite_existing_file(self) -> None:
+        window = gui.CameraWindow.__new__(gui.CameraWindow)
+        window.root = mock.Mock()
+        window.host = "192.168.1.2"
+        window.snapshot_busy = False
+        window.control_lock = threading.Lock()
+        window.events = queue.Queue()
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "photo.jpg"
+            destination.write_bytes(b"existing")
+            with (
+                mock.patch.object(
+                    gui.filedialog, "asksaveasfilename", return_value=str(destination)
+                ),
+                mock.patch.object(gui, "enable_preview"),
+                mock.patch.object(
+                    gui, "fetch_snapshot", side_effect=TimeoutError("timeout")
+                ),
+            ):
+                window.save_snapshot()
+                kind, message = window.events.get(timeout=2)
+            self.assertEqual(destination.read_bytes(), b"existing")
+            self.assertEqual(kind, "snapshot")
+            self.assertIn("Snapshot failed", message)
+
+    def test_snapshot_dialog_cancel_does_not_start_capture(self) -> None:
+        window = gui.CameraWindow.__new__(gui.CameraWindow)
+        window.root = mock.Mock()
+        window.snapshot_busy = False
+        with (
+            mock.patch.object(gui.filedialog, "asksaveasfilename", return_value=""),
+            mock.patch.object(gui.threading, "Thread") as thread,
+        ):
+            window.save_snapshot()
+        thread.assert_not_called()
+        self.assertFalse(window.snapshot_busy)
 
 
 if __name__ == "__main__":

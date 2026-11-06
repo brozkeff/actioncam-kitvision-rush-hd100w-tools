@@ -1,6 +1,6 @@
 [project]
 name = "rush-hd100w"
-version = "0.0.2"
+version = "0.0.3"
 description = "Experimental control and virtual webcam tools for the Kitvision Rush HD100W action camera"
 readme = "README.md"
 authors = [{ name = "Martin brozkeff Malec" }]
