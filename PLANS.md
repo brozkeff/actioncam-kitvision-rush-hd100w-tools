@@ -22,7 +22,8 @@
 - [ ] Trace port 8084 request parsing, supported methods and paths in the active
       `/bin/http` binary, including camera-device and realtime mode calls.
 - [ ] Trace the Android app's realtime startup and control commands; it calls
-      `ProtocolSwitchRealtime`, waits two seconds and opens `/?stream`.
+      `ProtocolSwitchRealtime` (family 255, command 3, `Real_Time`, timeout
+      10000), waits two seconds and opens `/?stream`; trace remaining setup.
 - [ ] Reconstruct the dumped uClibc links in an isolated environment and use
       QEMU, syscall tracing and multiarchitecture GDB to investigate `/bin/http`.
       Account for the unavailable proprietary `/dev/CAM00` device.
