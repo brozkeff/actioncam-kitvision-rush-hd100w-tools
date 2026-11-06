@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.0.7] - 2026-11-06
+
+### Added
+
+- Managed recording CLI and GUI controls that select a local destination,
+  identify a new camera video and download it after stopping.
+
 ## [0.0.6] - 2026-11-06
 
 ### Added

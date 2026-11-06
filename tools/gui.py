@@ -1,6 +1,7 @@
 """Experimental Tkinter controller for the Rush HD100W camera."""
 
 import argparse
+import ftplib
 import io
 import queue
 import subprocess
@@ -14,8 +15,10 @@ from typing import Any
 from PIL import Image, ImageTk
 
 if __package__:
+    from .record import capture
     from .rush import enable_preview, fetch_snapshot, host_address
 else:
+    from record import capture
     from rush import enable_preview, fetch_snapshot, host_address
 
 TOOLS = Path(__file__).resolve().parent
@@ -57,6 +60,7 @@ class CameraWindow:
         self.control_lock = threading.Lock()
         self.control_busy = False
         self.snapshot_busy = False
+        self.record_stop: threading.Event | None = None
         self.preview_stop: threading.Event | None = None
         self.preview_generation = 0
         self.photo: ImageTk.PhotoImage | None = None
@@ -85,12 +89,16 @@ class CameraWindow:
         for label, arguments in (
             ("Real-time mode", ("mode", "realtime")),
             ("Storage mode", ("mode", "storage")),
-            ("Start recording", ("record", "start")),
-            ("Stop recording", ("record", "stop")),
         ):
             ttk.Button(
                 modes, text=label, command=lambda a=arguments: self.command(*a)
             ).pack(side="left", padx=2)
+        ttk.Button(modes, text="Start recording…", command=self.start_recording).pack(
+            side="left", padx=2
+        )
+        ttk.Button(modes, text="Stop and save", command=self.stop_recording).pack(
+            side="left", padx=2
+        )
         ttk.Label(
             outer,
             text="Mode switching and recording are experimental and may be rejected.",
@@ -172,6 +180,53 @@ class CameraWindow:
     def refresh(self) -> None:
         """Request an immediate status and camera clock refresh."""
         self.launch((), poll=True)
+
+    def start_recording(self) -> None:
+        """Choose a destination before starting a managed recording."""
+        if self.control_busy or self.record_stop is not None:
+            self.log("A camera operation is already running.")
+            return
+        destination = filedialog.asksaveasfilename(
+            parent=self.root,
+            title="Save recording",
+            defaultextension=".mov",
+            filetypes=[("MOV video", "*.mov"), ("All files", "*")],
+            initialfile="rush-recording.mov",
+        )
+        if not destination:
+            return
+        if Path(destination).exists():
+            self.log("Choose a new filename; existing files are not replaced.")
+            return
+        self.stop_preview()
+        stop = threading.Event()
+        self.record_stop = stop
+        self.control_busy = True
+
+        def worker() -> None:
+            try:
+                with self.control_lock:
+                    remote = capture(
+                        self.host,
+                        Path(destination),
+                        stop.wait,
+                        lambda message: self.events.put(("record_message", message)),
+                    )
+                self.events.put(("record_message", f"Saved {remote} to {destination}"))
+            except (OSError, ValueError, RuntimeError, ftplib.Error) as error:
+                self.events.put(("record_message", f"Recording failed: {error}"))
+            finally:
+                self.events.put(("record_done", None))
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def stop_recording(self) -> None:
+        """Signal the recording worker to stop and download."""
+        if self.record_stop is not None:
+            self.record_stop.set()
+            self.log("Stopping and saving recording…")
+        else:
+            self.log("No managed recording is active.")
 
     def poll_status(self) -> None:
         """Schedule regular status refreshes while the window remains open."""
@@ -279,6 +334,11 @@ class CameraWindow:
                 break
             if kind == "idle":
                 self.control_busy = False
+            elif kind == "record_done":
+                self.record_stop = None
+                self.control_busy = False
+            elif kind == "record_message":
+                self.log(value)
             elif kind == "failure":
                 poll, error = value
                 if poll:
@@ -341,6 +401,10 @@ class CameraWindow:
 
     def close(self) -> None:
         """Stop background preview and close the window without blocking Tk."""
+        if self.record_stop is not None:
+            self.stop_recording()
+            self.log("Wait for saving to finish before closing.")
+            return
         self.closed = True
         self.stop_preview()
         self.root.destroy()

@@ -3,8 +3,8 @@
 Independent Linux-first tooling for the Kitvision Rush HD100W action camera.
 Python 3.15 prototypes can inspect services, activate preview, capture JPEGs and
 publish the preview as a Linux virtual webcam, inspect camera status and set
-the recording clock. Recording start/stop commands are implemented but currently
-rejected by this camera; successful SD recording remains unresolved.
+the recording clock. Experimental recording controls can copy a new video from
+the camera card; mode changes and recording commands can still fail.
 
 ## Why this project exists
 
@@ -36,6 +36,7 @@ uv sync --python 3.15
 uv run python tools/gui.py
 uv run python tools/rush.py inspect
 uv run python tools/control.py status
+uv run python tools/record.py --output my-video.mov
 uv run python tools/control.py clock set --now --dry-run
 uv run python tools/rush.py snapshot --activate tmp/snapshot.jpg
 uv run python tools/webcam.py
@@ -46,7 +47,8 @@ commands and displays live preview. It requires a graphical desktop and Python
 with Tkinter installed. Preview activation changes camera mode. Mode switching
 and recording can still be rejected; errors appear in the output box.
 Use **Save snapshot…** to choose where to save a JPEG; it activates preview
-if necessary and reports the result in the output box.
+if necessary and reports the result in the output box. **Start recording…**
+selects a video destination; **Stop and save** downloads the recording.
 
 ![Experimental camera controller showing status, preview and command output](docs/screenshots/tools-gui.png)
 

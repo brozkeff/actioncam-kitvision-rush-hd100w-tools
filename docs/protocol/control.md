@@ -115,6 +115,11 @@ ProtocolHostInfo1 in the APK.
 
 ## Recording failure investigation
 
+- The owner observed that remote recording did not change the green LED to
+  red and did not trigger vibration. This is an observation, not a guarantee
+  across modes or firmware. A subsequent managed-recording test started but
+  stop returned `0x8d`; a fresh status query also returned `0x8d`, leaving
+  the recording state unverified and preventing a file download.
 - After a user-reported restart on battery and a successful physical photo,
   Telnet showed `/dev/sda1` mounted at `/tmp/ftp/SDdisk`. Status and settings
   reported `Mass_Storage`; switching to `Real_Time` succeeded. Three recording
